@@ -1,1 +1,1 @@
-# -Stitchd-CDP-Mockup-Blog
+# Stitchd-CDP-Mockup
