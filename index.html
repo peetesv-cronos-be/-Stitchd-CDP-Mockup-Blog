@@ -56,6 +56,11 @@
                 <div class="logo">
                     <a href="index.html"><img src="images/logo.png" alt="logo" width="125px"></a>
                 </div>
+                <nav>
+                    <ul id="MenuItems">
+                        <li><a id="nav-account" href="account.html">Account</a></li>
+                    </ul>
+                </nav>
                 
             </div>
             
@@ -100,6 +105,8 @@
 
     function onLoad() {
 
+        refreshAccountInfoLabel();
+
         fetch("./data/blog_data.json")
         .then(function (response) {                    
             return response.json();
@@ -137,13 +144,26 @@
 
     function displayBlogPosts(posts) {
 
+        
+
         blogList.innerHTML = '';
         if (posts.length > 0) {
             posts.forEach(post => {
+
+                var hrefBlog = "";
+
+                if (localStorage.userLoggedIn == "true") {
+                    hrefBlog = `blog_details.html?blogid=${post.blogId}`;
+                }
+                else
+                {
+                    hrefBlog = `account.html`;
+                }
+
                 const blogItem = document.createElement('div');
                 blogItem.classList.add('blogItem');
                 blogItem.innerHTML = `
-                <a href='blog_details.html?blogid=${post.blogId}'><h4>${post.title}</h4></a>
+                <a href='${hrefBlog}'><h4>${post.title}</h4></a>
                 <h5><strong>Author:</strong> ${post.author}</h5>                
                 `;
                 blogList.appendChild(blogItem);

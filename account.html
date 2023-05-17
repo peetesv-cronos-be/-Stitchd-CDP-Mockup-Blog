@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow" />
-    <title>Blog Detail</title>
+    <title>Stitchd Mockup Blog Site</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -19,7 +19,7 @@
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KS2K87S');</script>
-    <!-- End Google Tag Manager -->
+        <!-- End Google Tag Manager -->
 
     <style>.xnpe_async_hide{opacity:0 !important}</style>
     <script>
@@ -42,6 +42,7 @@
     });
     exponea.start();
     </script>
+
 </head>
 
 <body onload="onLoad()">
@@ -57,16 +58,50 @@
                 </div>
                 <nav>
                     <ul id="MenuItems">
-                        <li><a id="nav-account" href="account.html">Account</a></li>
+                        <li><a id="nav-account" class="selected-nav-item" href="account.html">Account</a></li>
                     </ul>
-                </nav>               
+                </nav>                
             </div>
         </div>
     </div>
-    
-    <div id="blog-detail" class="small-container single-product">
-        
+
+    <!-- Account Page -->
+    <div class="account-page">
+        <div class="container">
+            <div class="row">                
+                <div class="col-2">
+                    <div class="form-container">
+
+                        <div class="form-btn">
+                            <span onclick="loginTabClicked()">Login</span>
+                            <span onclick="registerTabClicked()">Register</span>
+                            <span onclick="logoutTabClicked()">Logout</span>
+                            <hr id="Indicator">
+                        </div>
+
+                        <form id="LoginForm">
+                            <input id="LoginFormUserName" type="email" placeholder="Email">
+                            <input type="password" placeholder="Password">
+                            <button type="submit" class="btn">Login</button>
+                            <a href="">Forget Password</a>
+                        </form>   
+                        
+                        <form id="LogoutForm">
+                            <button type="submit" class="btn btnLogout">Logout</button>
+                        </form>
+
+                        <form id="RegForm">                            
+                            <input id="RegFormUserName" type="email" placeholder="Email">
+                            <input type="password" placeholder="Password">
+                            <button type="submit" class="btn">Register</button>
+                        </form>                       
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 
      <!-- Footer -->
      <div class="footer">
@@ -92,72 +127,76 @@
     <!-- javascript -->
 
     <script>
+        var MenuItems = document.getElementById("MenuItems");
+        MenuItems.style.maxHeight = "0px";
+        function menutoggle() {
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px"
+            }
+            else {
+                MenuItems.style.maxHeight = "0px"
+            }
+        }
+    </script>
 
-        var blog = null;
-        var blogDetail = document.getElementById("blog-detail");
+    <!-- Toggle Form -->
+    <script>
+
+        var LoginForm = document.getElementById("LoginForm");
+        var RegForm = document.getElementById("RegForm");
+        var LogoutForm = document.getElementById("LogoutForm");
+        var Indicator = document.getElementById("Indicator");
+
+        function registerTabClicked() {
+            RegForm.style.transform = "translatex(150px)";
+            LoginForm.style.transform = "translatex(1000px)";
+            LogoutForm.style.transform = "translatex(1000px)";
+            Indicator.style.transform = "translateX(100px)";
+        }
+
+        function loginTabClicked() {
+            RegForm.style.transform = "translatex(1000px)";
+            LoginForm.style.transform = "translatex(150px)";
+            LogoutForm.style.transform = "translatex(1000px)";
+            Indicator.style.transform = "translate(0px)";
+        }
+
+        function logoutTabClicked() {
+            RegForm.style.transform = "translatex(1000px)";
+            LoginForm.style.transform = "translatex(1000px)";
+            LogoutForm.style.transform = "translatex(150px)";
+            Indicator.style.transform = "translateX(200px)";
+        }
 
         function onLoad() {
 
+            loginTabClicked();
             refreshAccountInfoLabel();
 
-            const blogId = new URLSearchParams(window.location.search).get("blogid");
+            LoginForm.addEventListener("submit", (e) => {
 
-            fetch("./data/blog_data.json")
-                .then(function (response) {                    
-                    return response.json();
-                })
-                .then(function (data) {
+                localStorage.userLoggedIn = true;
+                localStorage.userName = document.getElementById("LoginFormUserName").value;
+                
+            });
 
-                    var blogFound = false;
+            RegForm.addEventListener("submit", (e) => {
 
-                    for (var blogIndex in data) {
-                        if (data[blogIndex].blogId == blogId) {
+                localStorage.userLoggedIn = true;
+                localStorage.userName = document.getElementById("RegFormUserName").value;
+                
+            });
 
-                            blog = data[blogIndex];
-
-                            const blogDetails1 = document.createElement("h1");
-                            blogDetails1.className = "blogTitle";
-                            const blogDetails2 = document.createElement("h4");
-                            blogDetails2.className = "blogAuthor";
-                            const blogDetails3 = document.createElement("h5");
-                            blogDetails3.className = "blogCategory";
-                            const blogDetails4 = document.createElement("p");
-                            blogDetails4.className = "blogContent";
-
-                            blogDetails1.innerText = blog.title;
-                            blogDetails2.innerText = blog.author;
-                            blogDetails3.innerText = blog.category;
-                            blogDetails4.innerText = blog.content;
-
-                            blogDetail.appendChild(blogDetails1);
-                            blogDetail.appendChild(blogDetails2);
-                            blogDetail.appendChild(blogDetails3);
-                            blogDetail.appendChild(blogDetails4);
-
-                            exponea.track('view_category', {
-                                category_level_1 : blog.category
-                            });
-
-                            blogFound = true;
-                            break;
-                        }
-
-                    }
-
-                    if (blogFound == false) {
-
-                        const blogNotFound = document.createElement("div");
-                        const blogNotFoundTitle = document.createElement("h1");
-                        blogNotFoundTitle.innerText = "Blog with id " + blogId + " not found";
-                        blogNotFound.appendChild(blogNotFoundTitle);
-
-                        blogDetail.appendChild(blogNotFound);
-                    }
-
-                })
+            LogoutForm.addEventListener("submit", (e) => {
+                
+                localStorage.userLoggedIn = false;
+                localStorage.userName = "";
+                
+            });
         }
-       
+
     </script>
+
 </body>
 
 </html>
